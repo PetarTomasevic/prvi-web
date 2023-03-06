@@ -1,0 +1,101 @@
+﻿@page "/osobe"
+@using WebSaApiem.Models;
+@inject HttpClient httpClient
+@inject NavigationManager navManager
+@*@inject DialogService DialogService*@
+
+<h3>Osobe</h3>
+<label for="search">Pretraži</label>
+<input type="text" id="search" 
+    @bind-value="searchString" name="search" 
+    placeholder="upiši string" />
+<button @onclick="Pretrazi">Search</button>
+<button @onclick="PrikaziSve">Prikaži Sve</button>
+
+<ul>
+    @foreach(var item in osobe)
+    {
+      <li> 
+          @item.Id
+          <br>
+          @item.Ime
+          <br>
+          @item.Prezime
+          <br>
+            <button class="btn btn-primary" @onclick="()=>Detalji(item.Id)">Detalji</button>
+            <button class="btn btn-info extra" @onclick="()=>Uredi(item.Id)">Uredi</button>
+            <button class="btn btn-success" @onclick="Dodaj">Dodaj</button>
+            <button class="btn btn-danger" @onclick="()=>Obrisi(item.Id)">Obriši</button>
+           @* <RadzenButton Text=@($"Osoba {item.Ime} Detalji") ButtonStyle="ButtonStyle.Secondary" Click=@(args =>OpenOsoba(item.Id)) />*@
+
+      </li>
+
+    }
+</ul>
+
+@code {
+    public List<Osoba> osobe = new List<Osoba>();
+    public string searchString = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var result =await httpClient.GetAsync("https://expertvjezbeapi.azurewebsites.net/api/Osobes");
+
+        if (result.IsSuccessStatusCode)
+        {
+            osobe =await result.Content.ReadFromJsonAsync<List<Osoba>>();
+
+            osobe = osobe.OrderByDescending(x=>x.Id).ToList();
+        }
+    }
+
+    public void Detalji(int id)
+    {
+        navManager.NavigateTo($"details/{id}");
+    }
+    public void Obrisi(int id)
+    {
+        navManager.NavigateTo($"delete/{id}");
+    }
+    public void Uredi(int id)
+    {
+        navManager.NavigateTo($"edit/{id}");
+    }
+
+    public void Dodaj()
+    {
+        navManager.NavigateTo($"dodaj");
+    }
+
+    public void Pretrazi()
+    {
+        osobe = osobe
+        .Where(x => 
+            x.Ime.ToLower().Contains(searchString.ToLower()) ||
+            x.Prezime.ToLower().Contains(searchString.ToLower())
+        )
+        .ToList();
+
+        StateHasChanged();
+
+    }
+    public async Task PrikaziSve()
+    {
+        var result = await httpClient.GetAsync("https://expertvjezbeapi.azurewebsites.net/api/Osobes");
+
+        if (result.IsSuccessStatusCode)
+        {
+            osobe = await result.Content.ReadFromJsonAsync<List<Osoba>>();
+
+            osobe = osobe.OrderByDescending(x => x.Id).ToList();
+        }
+    }
+
+    //public async Task OpenOsoba(int osobaId)
+    //{
+    //    await DialogService.OpenAsync<Detalji>($"Osoba {osobaId}",
+    //           new Dictionary<string, object>() { { "Osoba", osobaId } },
+    //           new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
+    //}
+
+
+}

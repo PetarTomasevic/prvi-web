@@ -1,0 +1,43 @@
+﻿@page "/details/{id:int}"
+@using WebSaApiem.Models
+@inject HttpClient httpClient;
+@inject NavigationManager navManager;
+<h3>Detalji</h3>
+Dohvaćeni id: @Id
+<div class="card">
+    <div class="card-header" style="background-color:darkcyan">
+        <p>Ime I prezime osobe:<h1 class="display-6"> @osoba.Ime @osoba.Prezime</h1></p>
+  </div>
+    <div class="card-body">
+    <p>Broj Telefona: @osoba.BrojTelefona</p>
+    <p>Broj Mobitela: @osoba.BrojMobitela</p>
+    <p>Adresa: @osoba.Adresa</p>
+    <p>Grad: @osoba.Grad</p>
+    <p>Država: @osoba.Drzava</p>
+        <button class="btn btn-primary" @onclick="Natrag">Natrag na listu</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Osoba osoba = new Osoba();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await httpClient
+        .GetAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            osoba =await result.Content.ReadFromJsonAsync<Osoba>();
+        }
+    }
+
+    public void Natrag()
+    {
+        navManager.NavigateTo("/osobe");
+
+    }
+
+
+}

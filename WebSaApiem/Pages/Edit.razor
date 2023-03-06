@@ -1,0 +1,64 @@
+﻿@page "/edit/{id:int}"
+@using WebSaApiem.Models
+@inject HttpClient httpClient;
+@inject NavigationManager navManager;
+<h3>Edit</h3>
+<form @onsubmit="UrediOsobu">
+    <div class="mb-3">
+        <label class="form-label" for="fime">Ime</label>
+        <input class="form-control" id="fime" @bind-value="osoba.Ime" name="fime" type="text" placeholder="Upiši ime" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="fprezime">Prezime</label>
+        <input class="form-control" id="fprezime" @bind-value="osoba.Prezime" name="fprezime" type="text" placeholder="Prezime" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="fbrtel">Broj Telefona</label>
+        <input class="form-control" id="fbrtel" @bind-value="osoba.BrojTelefona" name="fbrtel" type="text" placeholder="Broj telefona" />
+    </div>
+   <div class="mb-3">
+        <label class="form-label pero" for="fbrmob">Broj Mobitela</label>
+        <input class="form-control" id="fbrmob" @bind-value="osoba.BrojMobitela" name="fbrmob" type="text" placeholder="Broj mobitela" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="fadr">Adresa</label>
+        <input class="form-control" id="fadr" @bind-value="osoba.Adresa" name="fadr" type="text" placeholder="Adresa" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="fgrad">Grad</label>
+        <input class="form-control" id="fgrad" @bind-value="@osoba.Grad" name="fgrad" type="text" placeholder="Grad" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="fdrzava">Država</label>
+        <input class="form-control" id="fdrzava" name="fdrzava" @bind-value="osoba.Drzava" type="text" placeholder="Drzava" />
+    </div>
+    <p>
+        <button class="btn btn-primary" type="submit">Spremi izmjenu</button>
+    </p>
+</form>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    Osoba osoba = new Osoba();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await httpClient
+        .GetAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            osoba = await result.Content.ReadFromJsonAsync<Osoba>();
+        }
+    }
+    public async void UrediOsobu()
+    {
+        var result = await httpClient.PutAsJsonAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{osoba.Id}",osoba);
+        if (result.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/osobe");
+
+        }
+    }
+}

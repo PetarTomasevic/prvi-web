@@ -1,0 +1,64 @@
+﻿.form-label
+{
+    background-color:cornflowerblue;
+    color:#fff;
+    padding-left:20px;
+    padding-right:20px;
+}
+
+.form-control {
+    background-color: #2f79a1;
+    color: #d5e7d5;
+    border: 5px solid #45e148;
+    border-radius: 0.75rem;
+}
+.sidebar {
+    background-image: none !important;
+    background-color: #23d7aa;
+}
+
+.nav-item a {
+    color: #ffffff;
+    background-color: #158166;
+    border-radius: 8px;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    line-height: 5rem;
+}
+
+.pero {
+    background-color: black;
+}
+
+.extra {
+    background-color:antiquewhite !important;
+}
+
+.btn {
+    font-family:Bahnschrift;
+}
+.btn-primary {
+    border:dashed 5px ;
+}
+.btn-sm {
+}
+
+.btn-success {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.btn-success:hover {
+    background-color: black;
+    color: white;
+}
+    .btn-success:active {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        background-color: aquamarine;
+        border: dotted 5px;
+    }
+
+.display-6 {
+
+    font-size:large;
+    color:darkgreen;
+}

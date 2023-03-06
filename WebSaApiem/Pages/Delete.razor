@@ -1,0 +1,72 @@
+﻿@page "/delete/{id:int}"
+@using WebSaApiem.Models
+@inject HttpClient httpClient;
+@inject NavigationManager navManager;
+@inject IJSRuntime jsRun;
+<h3>Obirši</h3>
+@if (IsError == true)
+{
+<p>Uppppsss!! neka greška se dogodila. Kontaktirajte Administratora.</p>    
+}
+Dohvaćeni id: @Id
+<div>
+    <p>Ime: @osoba.Ime</p>
+    <p>Prezime: @osoba.Prezime</p>
+    <p>Broj Telefona: @osoba.BrojTelefona</p>
+    <p>Broj Mobitela: @osoba.BrojMobitela</p>
+    <p>Adresa: @osoba.Adresa</p>
+    <p>Grad: @osoba.Grad</p>
+    <p>Država: @osoba.Drzava</p>
+</div>
+<button @onclick="Natrag">Natrag na listu</button>
+<button @onclick="Obrisi">Obriši</button>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Osoba osoba = new Osoba();
+    public bool IsError = false;
+    protected override async Task OnInitializedAsync()
+    {
+
+        var result = await httpClient
+        .GetAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}");
+        if (result.IsSuccessStatusCode)
+        {
+            osoba = await result.Content.ReadFromJsonAsync<Osoba>();
+        }
+    }
+
+    public void Natrag()
+    {
+        navManager.NavigateTo("/osobe");
+
+    }
+
+    public async Task Obrisi()
+    {
+
+        await jsRun.InvokeVoidAsync("alert", "sada ćemovam sigurno obrisati osobu!");
+        var confirm = await jsRun
+        .InvokeAsync<bool>("confirm", "Da li ste sigurni da želite obrisati ovu osobu");
+
+        var vaseIme =await jsRun.InvokeAsync<string>("prompt","Upiši svoje ime");
+ 
+        if (confirm == true)
+        {
+            var result = await httpClient
+            .DeleteAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                navManager.NavigateTo("/osobe");
+            }
+            else
+            {
+                IsError = true;
+            }
+        }
+
+    
+    }
+
+
+}

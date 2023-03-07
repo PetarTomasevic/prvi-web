@@ -57,7 +57,7 @@
         var result = await httpClient.PutAsJsonAsync($"https://expertvjezbeapi.azurewebsites.net/api/Osobes/{osoba.Id}",osoba);
         if (result.IsSuccessStatusCode)
         {
-            navManager.NavigateTo("/osobe");
+            navManager.NavigateTo("osobe");
 
         }
     }

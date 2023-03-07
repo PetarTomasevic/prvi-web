@@ -26,7 +26,7 @@ jobs:
     # Publishes Blazor project to the release-folder
 
     - name: Publish .NET Core Project
-      run: dotnet publish WebSaApiem/WebSaApiem.csproj -c:Release -p:GHPages=true -o dist/Web --nologo
+      run: dotnet publish WebSaApiem/WebSaApiem.csproj dotnet -c Release -o release --nologo
      # changes the base-tag in index.html from '/' to 'WebSaApiem' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to WebSaApiem
       run: sed -i 's/<base href="\/" \/>/<base href="\/WebSaApiem\/" \/>/g' release/wwwroot/index.html
